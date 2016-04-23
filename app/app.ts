@@ -1,4 +1,5 @@
-import {App, IonicApp, Events, Platform} from 'ionic-angular';
+import {ViewChild} from 'angular2/core';
+import {App, Events, Platform, Nav} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {ConferenceData} from './providers/conference-data';
 import {UserData} from './providers/user-data';
@@ -7,6 +8,12 @@ import {LoginPage} from './pages/login/login';
 import {SignupPage} from './pages/signup/signup';
 import {TutorialPage} from './pages/tutorial/tutorial';
 
+interface PageObj {
+  title: string;
+  component: any;
+  icon: string;
+  index?: number;
+}
 
 @App({
   templateUrl: 'build/app.html',
@@ -14,18 +21,35 @@ import {TutorialPage} from './pages/tutorial/tutorial';
   config: {}
 })
 class ConferenceApp {
-  static get parameters() {
-    return [
-      [IonicApp], [Events], [ConferenceData], [UserData], [Platform]
-    ]
-  }
+  // the root nav is a child of the root app component
+  // @ViewChild(Nav) gets a reference to the app's root nav
+  @ViewChild(Nav) nav: Nav;
 
-  constructor(app, events, confData, userData, platform) {
-    this.app = app;
-    this.userData = userData;
-    this.events = events;
-    this.loggedIn = false;
+  // List of pages that can be navigated to from the left menu
+  // the left menu only works after login
+  // the login page disables the left menu
+  appPages: PageObj[] = [
+    { title: 'Schedule', component: TabsPage, icon: 'calendar' },
+    { title: 'Speakers', component: TabsPage, index: 1, icon: 'contacts' },
+    { title: 'Map', component: TabsPage, index: 2, icon: 'map' },
+    { title: 'About', component: TabsPage, index: 3, icon: 'information-circle' },
+  ];
+  loggedInPages: PageObj[] = [
+    { title: 'Logout', component: TabsPage, icon: 'log-out' }
+  ];
+  loggedOutPages: PageObj[] = [
+    { title: 'Login', component: LoginPage, icon: 'log-in' },
+    { title: 'Signup', component: SignupPage, icon: 'person-add' }
+  ];
+  rootPage: any = TutorialPage;
+  loggedIn = false;
 
+  constructor(
+    private events: Events,
+    private userData: UserData,
+    platform: Platform,
+    confData: ConferenceData
+  ) {
     // Call any initial plugins when ready
     platform.ready().then(() => {
       StatusBar.styleDefault();
@@ -33,28 +57,6 @@ class ConferenceApp {
 
     // load the conference data
     confData.load();
-
-    // We plan to add auth to only show the login page if not logged in
-    this.root = TutorialPage;
-
-    // create an list of pages that can be navigated to from the left menu
-    // the left menu only works after login
-    // the login page disables the left menu
-    this.appPages = [
-      { title: 'Schedule', component: TabsPage, icon: 'calendar' },
-      { title: 'Speakers', component: TabsPage, index: 1, icon: 'contacts' },
-      { title: 'Map', component: TabsPage, index: 2, icon: 'map' },
-      { title: 'About', component: TabsPage, index: 3, icon: 'information-circle' },
-    ];
-
-    this.loggedInPages = [
-      { title: 'Logout', component: TabsPage, icon: 'log-out' }
-    ];
-
-    this.loggedOutPages = [
-      { title: 'Login', component: LoginPage, icon: 'log-in' },
-      { title: 'Signup', component: SignupPage, icon: 'person-add' }
-    ]
 
     // decide which menu items should be hidden by current login status stored in local storage
     this.userData.hasLoggedIn().then((hasLoggedIn) => {
@@ -64,16 +66,15 @@ class ConferenceApp {
     this.listenToLoginEvents();
   }
 
-  openPage(page) {
-    // find the nav component and set what the root page should be
+  openPage(page: PageObj) {
+    // the nav component was found using @ViewChild(Nav)
     // reset the nav to remove previous pages and only have this page
     // we wouldn't want the back button to show in this scenario
-    let nav = this.app.getComponent('nav');
-
     if (page.index) {
-      nav.setRoot(page.component, {tabIndex: page.index});
+      this.nav.setRoot(page.component, {tabIndex: page.index});
+
     } else {
-      nav.setRoot(page.component);
+      this.nav.setRoot(page.component);
     }
 
     if (page.title === 'Logout') {

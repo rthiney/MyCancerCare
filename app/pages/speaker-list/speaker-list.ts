@@ -8,15 +8,10 @@ import {SessionDetailPage} from '../session-detail/session-detail';
   templateUrl: 'build/pages/speaker-list/speaker-list.html'
 })
 export class SpeakerListPage {
-  static get parameters() {
-    return [[NavController], [ConferenceData]];
-  }
+  actionSheet: ActionSheet;
+  speakers = [];
 
-  constructor(nav, confData) {
-    this.nav = nav;
-    this.confData = confData;
-    this.speakers = [];
-
+  constructor(private nav: NavController, confData: ConferenceData) {
     confData.getSpeakers().then(speakers => {
       this.speakers = speakers;
     });
@@ -26,7 +21,7 @@ export class SpeakerListPage {
     this.nav.push(SessionDetailPage, session);
   }
 
-  goToSpeakerDetail(speakerName) {
+  goToSpeakerDetail(speakerName: string) {
     this.nav.push(SpeakerDetailPage, speakerName);
   }
 
@@ -42,8 +37,8 @@ export class SpeakerListPage {
           text: 'Copy Link',
           handler: () => {
             console.log("Copy link clicked on https://twitter.com/" + speaker.twitter);
-            if (window.cordova && window.cordova.plugins.clipboard) {
-              window.cordova.plugins.clipboard.copy("https://twitter.com/" + speaker.twitter);
+            if (window['cordova'] && window['cordova'].plugins.clipboard) {
+              window['cordova'].plugins.clipboard.copy("https://twitter.com/" + speaker.twitter);
             }
           }
         },
@@ -59,7 +54,7 @@ export class SpeakerListPage {
           handler: () => {
             console.log("Cancel clicked");
           }
-        },
+        }
       ]
     });
 

@@ -1,19 +1,13 @@
 import {Injectable} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {UserData} from './user-data';
+import {UserData} from './user-data';;
 
 
 @Injectable()
 export class ConferenceData {
-  static get parameters(){
-    return [[Http], [UserData]];
-  }
+  data: any;
 
-  constructor(http, user) {
-    // inject the Http provider and set to this instance
-    this.http = http;
-    this.user = user;
-  }
+  constructor(private http: Http, private user: UserData) {}
 
   load() {
     if (this.data) {
@@ -85,7 +79,7 @@ export class ConferenceData {
       day.shownSessions = 0;
 
       queryText = queryText.toLowerCase().replace(/,|\.|-/g,' ');
-      let queryWords = queryText.split(' ').filter(w => w.trim().length);
+      let queryWords = queryText.split(' ').filter(w => !!w.trim().length);
 
       day.groups.forEach(group => {
         group.hide = true;

@@ -2,7 +2,6 @@
 
 This is purely a demo of Ionic v2.0 and is still in development.
 
-
 ## Important!
 **There is not an actual Ionic Conference at this time.** This project is just to show off Ionic v2.0 components in a real-world application.
 Please go through the steps in [CONTRIBUTING.md](https://github.com/driftyco/ionic-conference-app/blob/master/CONTRIBUTING.md) before submitting an issue.
@@ -21,14 +20,10 @@ Please go through the steps in [CONTRIBUTING.md](https://github.com/driftyco/ion
 ## Getting Started
 
 * Clone this repository.
-* Want to use TypeScript? Check out the `typescript` branch: `git checkout typescript`
 * Run `npm install` from the project root.
 * Install the ionic CLI (`npm install -g ionic@beta`)
 * Run `ionic serve` in a terminal from the project root.
 * Profit
-
-**Note:** Build slow? Update to `npm3`: `npm install -g npm`.
-
 
 
 ## Contributing
@@ -163,7 +158,7 @@ ionic-conference-app/
 ├── resources/                         * Images for splash screens and icons
 |
 ├── www/                               * Folder that is copied over to platforms www directory
-│   │
+│   │   
 │   ├── build/                         * Contains auto-generated compiled content
 │   │     ├── css/                     * Compiled CSS
 │   │     ├── fonts/                   * Copied Fonts

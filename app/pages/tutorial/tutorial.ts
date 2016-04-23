@@ -3,19 +3,20 @@ import {TabsPage} from '../tabs/tabs';
 import {SignupPage} from '../signup/signup';
 
 
+interface Slide {
+  title: string;
+  description: string;
+  image: string;
+}
+
 @Page({
   templateUrl: 'build/pages/tutorial/tutorial.html'
 })
 export class TutorialPage {
-  static get parameters() {
-    return [[NavController], [MenuController]];
-  }
+  slides: Slide[];
+  showSkip = true;
 
-  constructor(nav, menu) {
-    this.nav = nav;
-    this.menu = menu;
-    this.showSkip = true;
-
+  constructor(private nav: NavController, private menu: MenuController) {
     this.slides = [
       {
         title: "Welcome to <b>ICA</b>",
@@ -44,12 +45,12 @@ export class TutorialPage {
   }
 
   onPageDidEnter() {
-    // the left menu should be disabled on the tutorial page
+    // the root left menu should be disabled on the tutorial page
     this.menu.enable(false);
   }
 
-  onPageDidLeave() {
-    // enable the left menu when leaving the tutorial page
+  onPageWillLeave() {
+    // enable the root left menu when leaving the tutorial page
     this.menu.enable(true);
   }
 

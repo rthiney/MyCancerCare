@@ -1,4 +1,3 @@
-
 <ion-navbar *navbar>
   <button menuToggle>
     <ion-icon name="menu"></ion-icon>
@@ -34,13 +33,62 @@
 
       <ion-row responsive-sm>
         <ion-col>
-          <button (click)="onLogin(loginForm)" type="submit" primary block>Login</button>
+          <button (click)="onLogin(loginForm)" type="submit" light block>Login</button>
         </ion-col>
         <ion-col>
           <button (click)="onSignup()" light block>Signup</button>
         </ion-col>
       </ion-row>
+
+      <ion-row responsive-sm>
+        <ion-col>
+          <button [hidden]="isLoggedIn" (click)="authWithProvider('google')" danger round>
+                     <ion-icon name="home"></ion-icon>Google+</button>
+
+        </ion-col>
+        <ion-col>
+
+          <button [hidden]="isLoggedIn" (click)="authWithProvider('facebook')" round>
+    <ion-icon name="facebook"></ion-icon>
+          Facebook</button>
+        </ion-col>
+      </ion-row>
+
     </form>
   </ion-list>
+  <ion-card [hidden]="!isLoggedIn">
+    <ion-card-header>
+      <h1 style="text-align: center;"><strong>{{authDataProfileName}}</strong></h1>
+    </ion-card-header>
+    <img src="{{authDataProfileImage}}" style="width: 300px; margin: 0 auto;" />
+    <ion-card-content>
+      <p>
+        {{authDataProfileDescription}}
+      </p><br/>
+      <p>
+        <strong>Member since:</strong> {{authDataProfileMemberSince}}
+      </p>
+      <p>
+        <strong>Number of followers:</strong> {{authDataProfileNoFollowers}}
+      </p>
+      <p>
+        <strong>Location:</strong> {{authDataProfileLocation}}
+      </p>
+    </ion-card-content>
+    <ion-item>
+      <ion-row responsive-sm>
+        <ion-col>
+          <button [hidden]="isLoggedIn" (click)="authWithProvider('google')" danger round>
+                     <ion-icon name="home"></ion-icon>Google+</button>
 
+        </ion-col>
+        <ion-col>
+
+          <button [hidden]="isLoggedIn" (click)="authWithProvider('facebook')" round>
+    <ion-icon name="facebook"></ion-icon>
+          Facebook</button>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-card>
 </ion-content>

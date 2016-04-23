@@ -1,4 +1,4 @@
-import {IonicApp, Page, Modal, Alert, NavController} from 'ionic-angular';
+import {IonicApp, Page, Modal, Alert, NavController, ItemSliding} from 'ionic-angular';
 import {ConferenceData} from '../../providers/conference-data';
 import {UserData} from '../../providers/user-data';
 import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
@@ -9,25 +9,19 @@ import {SessionDetailPage} from '../session-detail/session-detail';
   templateUrl: 'build/pages/schedule/schedule.html'
 })
 export class SchedulePage {
-  static get parameters() {
-    return [[IonicApp], [NavController], [ConferenceData], [UserData]];
-  }
+  dayIndex = 0;
+  queryText = '';
+  segment = 'all';
+  excludeTracks = [];
+  shownSessions = [];
+  groups = [];
 
-  constructor(app, nav, confData, user) {
-    this.app = app;
-    this.nav = nav;
-    this.confData = confData;
-    this.user = user;
-
-    this.dayIndex = 0;
-    this.queryText = '';
-    this.excludeTracks = [];
-    this.filterTracks = [];
-    this.segment = 'all';
-
-    this.hasSessions = false;
-    this.groups = [];
-
+  constructor(
+    private app: IonicApp,
+    private nav: NavController,
+    private confData: ConferenceData,
+    private user: UserData
+  ) {
     this.updateSchedule();
   }
 
@@ -46,7 +40,7 @@ export class SchedulePage {
     let modal = Modal.create(ScheduleFilterPage, this.excludeTracks);
     this.nav.present(modal);
 
-    modal.onDismiss(data => {
+    modal.onDismiss((data: any[]) => {
       if (data) {
         this.excludeTracks = data;
         this.updateSchedule();
@@ -61,7 +55,7 @@ export class SchedulePage {
     this.nav.push(SessionDetailPage, sessionData);
   }
 
-  addFavorite(slidingItem, sessionData) {
+  addFavorite(slidingItem: ItemSliding, sessionData) {
 
     if (this.user.hasFavorite(sessionData.name)) {
       // woops, they already favorited it! What shall we do!?

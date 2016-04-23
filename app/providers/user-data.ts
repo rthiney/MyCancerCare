@@ -4,16 +4,11 @@ import {Storage, LocalStorage, Events} from 'ionic-angular';
 
 @Injectable()
 export class UserData {
-  static get parameters(){
-    return [[Events]];
-  }
+  _favorites = [];
+  HAS_LOGGED_IN = 'hasLoggedIn';
+  storage = new Storage(LocalStorage);
 
-  constructor(events) {
-    this._favorites = [];
-    this.storage = new Storage(LocalStorage);
-    this.events = events;
-    this.HAS_LOGGED_IN = 'hasLoggedIn';
-  }
+  constructor(private events: Events) {}
 
   hasFavorite(sessionName) {
     return (this._favorites.indexOf(sessionName) > -1);
@@ -30,18 +25,18 @@ export class UserData {
     }
   }
 
-  login(username, password) {
-    this.storage.set(this.HAS_LOGGED_IN, true);
+  login() {
+    //this.storage.set(this.HAS_LOGGED_IN, true);
     this.events.publish('user:login');
   }
 
-  signup(username, password) {
-    this.storage.set(this.HAS_LOGGED_IN, true);
+  signup() {
+    //this.storage.set(this.HAS_LOGGED_IN, true);
     this.events.publish('user:signup');
   }
 
   logout() {
-    this.storage.remove(this.HAS_LOGGED_IN);
+    //this.storage.remove(this.HAS_LOGGED_IN);
     this.events.publish('user:logout');
   }
 
